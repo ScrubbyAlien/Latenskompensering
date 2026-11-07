@@ -7,11 +7,15 @@ public class PlayerController : MonoBehaviour
     private Rigidbody body;
     private InputAction move;
     private InputAction dash;
+    private InputAction swing;
     private float linearDampening;
 
     private bool inDash;
     private bool dashPerformed;
     private float nextDashTime;
+
+    [SerializeField]
+    private Animator animator;
 
     [SerializeField]
     private float acceleration;
@@ -33,6 +37,7 @@ public class PlayerController : MonoBehaviour
         linearDampening = body.linearDamping;
         move = InputSystem.actions.FindAction("Move");
         dash = InputSystem.actions.FindAction("Dash");
+        swing = InputSystem.actions.FindAction("Swing");
     }
 
     private void Update() {
@@ -45,6 +50,10 @@ public class PlayerController : MonoBehaviour
         }
         else {
             inDash = Time.time < nextDashTime;
+        }
+
+        if (swing.WasPressedThisFrame()) {
+            animator?.SetTrigger("swing");
         }
     }
 
