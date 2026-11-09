@@ -21,6 +21,7 @@ public class Ball : MonoBehaviour
         Vector3 netDifference = netIntersection.XZ() - transform.position.XZ();
         Vector2 fixedPoint = new Vector2(netDifference.magnitude, height);
         
+        // messed around on desmos to get these values, too much algebra gd
         float distance = difference.magnitude;
         float a = fixedPoint.y / (fixedPoint.x * fixedPoint.x - distance * fixedPoint.x);
         float b = -a * distance;

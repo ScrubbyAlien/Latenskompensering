@@ -34,11 +34,7 @@ public class BallLauncher : MonoBehaviour
             
             Vector3 positionInBounds = RandomPositionInBounds(startingArea);
             Vector3 destination = RandomPositionInBounds(targetArea);
-            float distanceToIntersection =
-                positionInBounds.z * Vector3.Distance(positionInBounds, destination) /
-                positionInBounds.z + destination.z;
-            Vector3 intersection =
-                positionInBounds + distanceToIntersection * (destination - positionInBounds).normalized;
+            Vector3 intersection = NetIntersection(positionInBounds, destination);
             
             
             Debug.DrawLine(positionInBounds, destination, Color.red, 10f);
@@ -50,6 +46,11 @@ public class BallLauncher : MonoBehaviour
             Ball ball = Instantiate(ballPrefab, positionInBounds, Quaternion.identity);
             ball.LaunchToPosition(destination, intersection, height);
         }
+    }
+
+    private Vector3 NetIntersection(Vector3 a, Vector3 b) {
+        float distanceToIntersection = a.z * Vector3.Distance(a, b) / a.z + b.z;
+        return a + distanceToIntersection * (b - a).normalized;
     }
 
     [Button]
