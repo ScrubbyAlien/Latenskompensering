@@ -16,6 +16,12 @@ public class Ball : MonoBehaviour
         shadow.position = transform.position.XZ();
     }
 
+    private void OnTriggerEnter(Collider other) {
+        if (other.tag == "OutOfBounds") {
+            Destroy(gameObject);
+        }
+    }
+
     public void LaunchToPosition(Vector3 destination, Vector3 netIntersection, float height) {
         Vector3 difference = destination.XZ() - transform.position.XZ();
         Vector3 netDifference = netIntersection.XZ() - transform.position.XZ();
