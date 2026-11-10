@@ -217,15 +217,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BallLauncher
   ballPrefab: {fileID: 2481178393886289654, guid: c8492391678696c4f88ecf0d521b84fe, type: 3}
-  startingArea:
-    m_Center: {x: 0, y: 2, z: 5}
-    m_Extent: {x: 6.5, y: 0, z: 4}
-  targetArea:
-    m_Center: {x: 0, y: 2, z: -5}
-    m_Extent: {x: 6.5, y: 0, z: 4}
+  courtInfo: {fileID: 11400000, guid: 81df696b1b5922640beb77b278eee600, type: 2}
   timer: 2
-  netHeight: 4
-  ceilingHeight: 8
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -777,8 +770,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.46, y: 1.46, z: 1.46}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 784223154}
   - {fileID: 692847764}

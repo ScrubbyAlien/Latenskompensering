@@ -6,7 +6,14 @@ public class Ball : MonoBehaviour
 {
     [SerializeField]
     private Transform shadow;
+    [SerializeField]
+    private float lingerTime;
     private Rigidbody body;
+    public bool dead { get; private set; }
+    private float despawnTime;
+
+    [HideInInspector]
+    public PlayerController lastPlayerHit;
 
     private void Awake() {
         body = GetComponent<Rigidbody>();
@@ -14,15 +21,27 @@ public class Ball : MonoBehaviour
 
     private void Update() {
         shadow.position = transform.position.XZ();
+        if (dead && Time.time > despawnTime) {
+            Destroy(gameObject);            
+        }
     }
 
     private void OnTriggerEnter(Collider other) {
+        if (dead) return;
         if (other.tag == "OutOfBounds") {
-            Destroy(gameObject);
+            transform.position += new Vector3(0, other.transform.position.y + transform.localScale.y, 0);
+            Die();
+            // score point for opponent to lastPlayerHit
+        }
+        if (other.tag == "Court") {
+            transform.position += new Vector3(0, other.transform.position.y + transform.localScale.y, 0);
+            Die();
+            // score point for lastPlayerHit
         }
     }
 
     public void LaunchToPosition(Vector3 destination, Vector3 netIntersection, float height) {
+        if (dead) return;
         Vector3 difference = destination.XZ() - transform.position.XZ();
         Vector3 netDifference = netIntersection.XZ() - transform.position.XZ();
         Vector2 fixedPoint = new Vector2(netDifference.magnitude, height);
@@ -46,6 +65,13 @@ public class Ball : MonoBehaviour
     public void SetVelocity(Vector3 velocity) {
         body.linearVelocity = Vector3.zero;
         body.AddForce(velocity, ForceMode.VelocityChange);
+    }
+
+    private void Die() {
+        dead = true;
+        body.isKinematic = true;
+        body.detectCollisions = false;
+        despawnTime = Time.time + lingerTime;
     }
 
     private struct SecondDegreeFunction
