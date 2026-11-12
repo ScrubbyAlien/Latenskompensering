@@ -138,7 +138,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27dbcc614ea67fd47b17c522335e04ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Raquet
-  heldByASidePlayer: 0
+  heldByPlayer: {fileID: 0}
+  variation: 0.3
+  width: 4
   courtInfo: {fileID: 11400000, guid: 81df696b1b5922640beb77b278eee600, type: 2}
 --- !u!136 &5352969876025506140
 CapsuleCollider:
@@ -159,10 +161,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.0505316
-  m_Height: 2.5029426
+  m_Radius: 0.83
+  m_Height: 2.5148993
   m_Direction: 1
-  m_Center: {x: -0.25454208, y: 1.6788552, z: 0}
+  m_Center: {x: 0, y: 1.4714055, z: 0}
 --- !u!1 &6063677019820953116
 GameObject:
   m_ObjectHideFlags: 0

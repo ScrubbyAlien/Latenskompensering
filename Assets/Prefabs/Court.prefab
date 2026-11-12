@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 1119895201532385020}
   - component: {fileID: 6344512828690712272}
   - component: {fileID: 2732718277022911564}
+  - component: {fileID: 4914451731526596336}
   m_Layer: 0
   m_Name: Court
   m_TagString: Court
@@ -218,6 +219,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Court
   courtInfo: {fileID: 11400000, guid: 81df696b1b5922640beb77b278eee600, type: 2}
+--- !u!65 &4914451731526596336
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7386471875256467948}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 10, y: 0.01, z: 10}
+  m_Center: {x: 0, y: 0.005, z: 0}
 --- !u!1001 &8707164861996940788
 PrefabInstance:
   m_ObjectHideFlags: 0

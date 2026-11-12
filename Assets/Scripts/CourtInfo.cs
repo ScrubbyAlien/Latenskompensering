@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [CreateAssetMenu(menuName = "Infos/Court", fileName = "CourtInfo")]
 public class CourtInfo : ScriptableObject
@@ -7,7 +9,7 @@ public class CourtInfo : ScriptableObject
     public Bounds ASide, BSide;
     [SerializeField]
     public float netHeight, ceilingHeight;
-    
+
     private void OnValidate() {
         if (ceilingHeight < netHeight) ceilingHeight = netHeight;
     }
@@ -15,18 +17,23 @@ public class CourtInfo : ScriptableObject
     public float GetRandomHeight() {
         return Random.Range(netHeight, ceilingHeight);
     }
-    
+
+    public float GetHeightFromAngle(float angle) {
+        float t = Mathf.InverseLerp(-90, 90, angle);
+        return Mathf.Lerp(ceilingHeight, netHeight, t);
+    }
+
     public Vector3 NetIntersection(Vector3 a, Vector3 b) {
         float distanceToIntersection = a.z * Vector3.Distance(a.XZ(), b.XZ()) / a.z + b.z;
         return a.XZ() + distanceToIntersection * (b.XZ() - a.XZ()).normalized;
     }
-    
+
     /// true = A side, false = B side
     public Vector3 GetRandomPositionOnSide(bool aSide) {
         Bounds side = aSide ? ASide : BSide;
         return RandomPositionInBounds(side);
     }
-    
+
     private static Vector3 RandomPositionInBounds(Bounds bounds) {
         return new Vector3(
             Random.Range(bounds.min.x, bounds.max.x),
@@ -34,5 +41,4 @@ public class CourtInfo : ScriptableObject
             Random.Range(bounds.min.z, bounds.max.z)
         );
     }
-
 }

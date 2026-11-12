@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6266056144827328342
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6787537115551941452}
+  m_Layer: 0
+  m_Name: ServeHandle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6787537115551941452
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6266056144827328342}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.62, y: 1.637, z: 0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 5701976328035144592}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7804079976646616152
 GameObject:
   m_ObjectHideFlags: 0
@@ -16,8 +47,8 @@ GameObject:
   - component: {fileID: 1663086816613602070}
   - component: {fileID: 5358969254007768558}
   m_Layer: 0
-  m_Name: Player
-  m_TagString: Untagged
+  m_Name: PlayerBlue
+  m_TagString: Court
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -36,6 +67,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7822056249058750569}
+  - {fileID: 6787537115551941452}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1098611928980035681
@@ -157,13 +189,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8a2611e8c576c7419ce787223334985, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  animator: {fileID: 5358969254007768558}
   acceleration: 30
   dampening: 0.8
   maxSpeed: 7
   dashAcceleration: 10
   dashSpeed: 15
   dashCooldown: 0.4
+  animator: {fileID: 5358969254007768558}
+  isASidePlayer: 0
+  raquet: {fileID: 6678855816101086370}
+  serveHandle: {fileID: 6787537115551941452}
 --- !u!95 &5358969254007768558
 Animator:
   serializedVersion: 7
@@ -234,6 +269,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3041767561658555605, guid: a46daba172df925468955626697b8859, type: 3}
+      propertyPath: heldByPlayer
+      value: 
+      objectReference: {fileID: 1663086816613602070}
     - target: {fileID: 4902990767906568275, guid: a46daba172df925468955626697b8859, type: 3}
       propertyPath: m_Name
       value: Raquet
@@ -243,6 +282,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a46daba172df925468955626697b8859, type: 3}
+--- !u!114 &6678855816101086370 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3041767561658555605, guid: a46daba172df925468955626697b8859, type: 3}
+  m_PrefabInstance: {fileID: 8540663833960061047}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27dbcc614ea67fd47b17c522335e04ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Raquet
 --- !u!4 &7822056249058750569 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1876609297428932638, guid: a46daba172df925468955626697b8859, type: 3}

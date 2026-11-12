@@ -155,7 +155,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Ball
   shadow: {fileID: 2493287273777954172}
+  maxSpeed: 15
   lingerTime: 2
+  lastPlayerHit: {fileID: 0}
 --- !u!1 &8730010291351505536
 GameObject:
   m_ObjectHideFlags: 0

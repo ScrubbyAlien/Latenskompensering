@@ -1,11 +1,16 @@
 using System;
+using Unity.GraphToolkit.Editor;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Ball : MonoBehaviour
 {
+    public event Action<Controller, bool> BallDied;
+    
     [SerializeField]
     private Transform shadow;
+    [SerializeField]
+    private float maxSpeed;
     [SerializeField]
     private float lingerTime;
     private Rigidbody body;
@@ -13,16 +18,26 @@ public class Ball : MonoBehaviour
     private float despawnTime;
 
     [HideInInspector]
-    public PlayerController lastPlayerHit;
+    public Controller lastPlayerHit;
+
+    public Vector3 velocity => body.linearVelocity; 
+    public bool beingServed { get; private set; }
+    public Controller servingPlayer { get; private set; }
 
     private void Awake() {
         body = GetComponent<Rigidbody>();
     }
 
     private void Update() {
+        if (beingServed) transform.position = servingPlayer.ServePosition();
         shadow.position = transform.position.XZ();
         if (dead && Time.time > despawnTime) {
             Destroy(gameObject);            
+        }
+
+        if (transform.position.sqrMagnitude > 1000) {
+            BallDied?.Invoke(lastPlayerHit, false);
+            Die();
         }
     }
 
@@ -32,19 +47,36 @@ public class Ball : MonoBehaviour
             transform.position += new Vector3(0, other.transform.position.y + transform.localScale.y, 0);
             Die();
             // score point for opponent to lastPlayerHit
+            BallDied?.Invoke(lastPlayerHit, false);
         }
         if (other.tag == "Court") {
             transform.position += new Vector3(0, other.transform.position.y + transform.localScale.y, 0);
             Die();
             // score point for lastPlayerHit
+            bool ownCourt = !(transform.position.z > 0 ^ lastPlayerHit.playerA);
+            BallDied?.Invoke(lastPlayerHit, !ownCourt);
         }
+    }
+
+    public void EnterServeState(Controller player, int score) {
+        beingServed = true;
+        servingPlayer = player;
+        player.OnGetServe();
+        body.isKinematic = true;
+    }
+
+    public void ExitServeState() {
+        beingServed = false;
+        servingPlayer = null;
+        body.isKinematic = false;
     }
 
     public void LaunchToPosition(Vector3 destination, Vector3 netIntersection, float height) {
         if (dead) return;
         Vector3 difference = destination.XZ() - transform.position.XZ();
         Vector3 netDifference = netIntersection.XZ() - transform.position.XZ();
-        Vector2 fixedPoint = new Vector2(netDifference.magnitude, height);
+        // max ensures no 2 * time is never zero a couple lines down
+        Vector2 fixedPoint = new Vector2(netDifference.magnitude, Mathf.Max(height - transform.position.y, 0.01f));
         
         // messed around on desmos to get these values, too much algebra gd
         float distance = difference.magnitude;
@@ -63,8 +95,9 @@ public class Ball : MonoBehaviour
     }
     
     public void SetVelocity(Vector3 velocity) {
-        body.linearVelocity = Vector3.zero;
-        body.AddForce(velocity, ForceMode.VelocityChange);
+        Debug.Log($"{velocity}, {velocity.magnitude}");
+        velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
+        body.linearVelocity = velocity;
     }
 
     private void Die() {

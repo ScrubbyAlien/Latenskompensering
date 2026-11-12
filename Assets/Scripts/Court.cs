@@ -5,6 +5,8 @@ public class Court : MonoBehaviour
     [SerializeField]
     private CourtInfo courtInfo;
     
+    
+    
     private void OnDrawGizmos() {
         Gizmos.color = Color.darkRed;
         Gizmos.DrawWireCube(courtInfo.ASide.center, courtInfo.ASide.size);
