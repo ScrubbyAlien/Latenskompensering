@@ -1,4 +1,5 @@
 using System;
+using NaughtyAttributes;
 using Unity.GraphToolkit.Editor;
 using UnityEngine;
 
@@ -7,8 +8,11 @@ public class Ball : MonoBehaviour
 {
     public event Action<Controller, bool> BallDied;
     
-    [SerializeField]
+    [SerializeField, BoxGroup("Shadow")]
     private Transform shadow;
+    [SerializeField, BoxGroup("Shadow")]
+    private float minSizeHeight, maxSizeHeight, minSize, maxSize;
+    private float shadowThickness;
     [SerializeField]
     private float maxSpeed;
     [SerializeField]
@@ -26,11 +30,16 @@ public class Ball : MonoBehaviour
 
     private void Awake() {
         body = GetComponent<Rigidbody>();
+        shadowThickness = shadow.transform.localScale.y;
     }
 
     private void Update() {
         if (beingServed) transform.position = servingPlayer.ServePosition();
         shadow.position = transform.position.XZ();
+        float t = Mathf.InverseLerp(minSizeHeight, maxSizeHeight, transform.position.y);
+        float size = Mathf.Lerp(minSize, maxSize, t);
+        shadow.localScale = new Vector3(size, shadowThickness, size);
+        
         if (dead && Time.time > despawnTime) {
             Destroy(gameObject);            
         }
@@ -95,7 +104,6 @@ public class Ball : MonoBehaviour
     }
     
     public void SetVelocity(Vector3 velocity) {
-        Debug.Log($"{velocity}, {velocity.magnitude}");
         velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
         body.linearVelocity = velocity;
     }
