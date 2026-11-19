@@ -13,11 +13,15 @@ public class PlayerController : Controller
         dash = InputSystem.actions.FindAction("Dash");
         swing = InputSystem.actions.FindAction("Swing");
     }
-
+    
     protected override void Update() {
         base.Update();
         Move(move.ReadValue<Vector2>().normalized);
         if (dash.WasPerformedThisFrame()) Dash();
         if (swing.WasPressedThisFrame()) Swing();
+    }
+
+    public void Test(string testString) {
+        Debug.Log(testString);
     }
 }
