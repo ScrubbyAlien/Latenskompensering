@@ -3,7 +3,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : Controller
 {
-
     private InputAction move;
     private InputAction dash;
     private InputAction swing;
