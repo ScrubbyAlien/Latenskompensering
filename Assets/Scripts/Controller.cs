@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Controller : MonoBehaviour
 {
     private Rigidbody body;
-    
+
     [SerializeField]
     private float acceleration;
     [SerializeField]
@@ -13,19 +13,18 @@ public abstract class Controller : MonoBehaviour
     [SerializeField]
     private float maxSpeed;
 
-    [Header("Dash")]
-    [SerializeField]
+    [Header("Dash"), SerializeField]
     private float dashAcceleration;
     [SerializeField]
     private float dashSpeed;
     [SerializeField]
     private float dashCooldown;
-    
+
     [SerializeField]
     private Animator animator;
 
     private Vector2 moveVector;
-    
+
     private bool inDash;
     private bool dashPerformed;
     private float nextDashTime;
@@ -39,9 +38,8 @@ public abstract class Controller : MonoBehaviour
     public Raquet playerRaquet => raquet;
     [SerializeField]
     private Transform serveHandle;
-    
-    void Awake()
-    {
+
+    private void Awake() {
         body = GetComponent<Rigidbody>();
     }
 
@@ -57,7 +55,7 @@ public abstract class Controller : MonoBehaviour
         else if (!inDash) {
             body.linearVelocity *= dampening;
         }
-        
+
         float max = maxSpeed;
         if (inDash) {
             max = dashSpeed;
@@ -67,7 +65,7 @@ public abstract class Controller : MonoBehaviour
                 body.AddForce(dashForce, ForceMode.Impulse);
             }
         }
-        
+
         float speed = body.linearVelocity.magnitude;
         if (speed > max) {
             Vector3 backwards = -body.linearVelocity / speed;
@@ -76,20 +74,20 @@ public abstract class Controller : MonoBehaviour
         }
     }
 
-    protected void Move(Vector2 inputMoveVector) {
+    public void Move(Vector2 inputMoveVector) {
         moveVector = inputMoveVector;
     }
 
-    protected void Dash() {
+    public void Dash() {
         if (inDash) return;
         nextDashTime = Time.time + dashCooldown;
         dashPerformed = true;
     }
 
-    protected void Swing() {
+    public void Swing() {
         animator?.SetTrigger("swing");
     }
-    
+
     public Vector3 ServePosition() {
         return serveHandle.position;
     }
