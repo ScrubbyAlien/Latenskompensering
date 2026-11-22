@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 5358969254007768558}
   - component: {fileID: 8580170188371015851}
   - component: {fileID: 8612767072737871578}
+  - component: {fileID: 7146425073539035134}
   m_Layer: 0
   m_Name: PlayerBlueNetwork
   m_TagString: Court
@@ -187,7 +188,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7804079976646616152}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a8a2611e8c576c7419ce787223334985, type: 3}
   m_Name: 
@@ -236,7 +237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2259093679
+  GlobalObjectIdHash: 1729811047
   InScenePlacedSourceGlobalObjectIdHash: 0
   m_InScenePlacedDisabledByDefault: 0
   DeferredDespawnTick: 0
@@ -263,6 +264,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1952fb94585fd454e80799074175da89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RpcTest
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!114 &7146425073539035134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7804079976646616152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e247166f80c790418ca00fee3a47f06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HelloWorldPlayer
+  ShowTopMostFoldoutHeaderGroup: 1
+  Position:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: {x: 0, y: 0, z: 0}
 --- !u!1 &8618253018865910672
 GameObject:
   m_ObjectHideFlags: 0
