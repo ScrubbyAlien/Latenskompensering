@@ -52,4 +52,8 @@ public class ManagerTest : MonoBehaviour
             }
         }
     }
+
+    // private static void DebugInfo() {
+    //     if (networkManager.Is)
+    // }
 }

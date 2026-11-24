@@ -2,8 +2,10 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public abstract class Controller : MonoBehaviour
+public class Controller : MonoBehaviour
 {
+    public event Action OnGetServe;
+
     private Rigidbody body;
 
     [SerializeField]
@@ -51,9 +53,10 @@ public abstract class Controller : MonoBehaviour
         if (moveVector.x != 0f || moveVector.y != 0f) {
             Vector3 force = new Vector3(moveVector.x, 0, moveVector.y) * acceleration;
             body.AddForce(force, ForceMode.Acceleration);
+            body.linearDamping = 0;
         }
         else if (!inDash) {
-            body.linearVelocity *= dampening;
+            body.linearDamping = dampening;
         }
 
         float max = maxSpeed;
@@ -92,5 +95,7 @@ public abstract class Controller : MonoBehaviour
         return serveHandle.position;
     }
 
-    public virtual void OnGetServe() { }
+    public void GetServe() {
+        OnGetServe?.Invoke();
+    }
 }

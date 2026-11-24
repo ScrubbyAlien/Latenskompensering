@@ -69,7 +69,7 @@ public class Ball : MonoBehaviour
     public void EnterServeState(Controller player, int score) {
         beingServed = true;
         servingPlayer = player;
-        player.OnGetServe();
+        player.GetServe();
         body.isKinematic = true;
     }
 

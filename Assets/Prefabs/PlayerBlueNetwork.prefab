@@ -44,13 +44,14 @@ GameObject:
   - component: {fileID: 8996366713439374589}
   - component: {fileID: 3218104672297896873}
   - component: {fileID: 1982163779045554519}
+  - component: {fileID: 8803470938856696354}
   - component: {fileID: 1098611928980035681}
   - component: {fileID: 5247590582728888652}
   - component: {fileID: 8437527351577780030}
   - component: {fileID: 5481926112060303870}
-  - component: {fileID: 1663086816613602070}
   - component: {fileID: 5358969254007768558}
   - component: {fileID: 1811691441405857635}
+  - component: {fileID: 8823213815246812060}
   m_Layer: 0
   m_Name: PlayerBlueNetwork
   m_TagString: Court
@@ -88,7 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1729811047
+  GlobalObjectIdHash: 2259093679
   InScenePlacedSourceGlobalObjectIdHash: 0
   m_InScenePlacedDisabledByDefault: 0
   DeferredDespawnTick: 0
@@ -197,6 +198,20 @@ MonoBehaviour:
       Synchronize: 1
       ParameterType: 9
   AnimatorParametersExpanded: 0
+--- !u!114 &8803470938856696354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7804079976646616152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 339b363e116500c428341a4edc3c006a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayer
+  ShowTopMostFoldoutHeaderGroup: 1
+  playerInput: {fileID: 1811691441405857635}
 --- !u!33 &1098611928980035681
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -304,29 +319,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 0
---- !u!114 &1663086816613602070
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7804079976646616152}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8a2611e8c576c7419ce787223334985, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  acceleration: 30
-  dampening: 0.8
-  maxSpeed: 7
-  dashAcceleration: 10
-  dashSpeed: 15
-  dashCooldown: 0.4
-  animator: {fileID: 5358969254007768558}
-  isASidePlayer: 0
-  raquet: {fileID: 6678855816101086370}
-  serveHandle: {fileID: 6787537115551941452}
-  playerInput: {fileID: 1811691441405857635}
 --- !u!95 &5358969254007768558
 Animator:
   serializedVersion: 7
@@ -356,7 +348,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7804079976646616152}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
@@ -374,11 +366,33 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: Keyboard&Mouse
+  m_NeverAutoSwitchControlSchemes: 1
+  m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &8823213815246812060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7804079976646616152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a102a344679b1144a7f539db2463a0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Controller
+  acceleration: 50
+  dampening: 8
+  maxSpeed: 7
+  dashAcceleration: 20
+  dashSpeed: 12
+  dashCooldown: 0.4
+  animator: {fileID: 5358969254007768558}
+  isASidePlayer: 0
+  raquet: {fileID: 6678855816101086370}
+  serveHandle: {fileID: 6787537115551941452}
 --- !u!1 &8618253018865910672
 GameObject:
   m_ObjectHideFlags: 0
@@ -544,7 +558,7 @@ PrefabInstance:
     - target: {fileID: 3041767561658555605, guid: a46daba172df925468955626697b8859, type: 3}
       propertyPath: heldByPlayer
       value: 
-      objectReference: {fileID: 1663086816613602070}
+      objectReference: {fileID: 0}
     - target: {fileID: 4902990767906568275, guid: a46daba172df925468955626697b8859, type: 3}
       propertyPath: m_Name
       value: Raquet

@@ -1,12 +1,16 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 
-public class DeviceManager : NetworkBehaviour
+[RequireComponent(typeof(NetworkObject))]
+public class DeviceManager : MonoBehaviour
 {
     public static DeviceManager instance;
     private HashSet<InputDevice> availableDevices;
+    private HashSet<InputDevice> usedDevices;
 
     private void Start() {
         if (instance) {
@@ -17,7 +21,4 @@ public class DeviceManager : NetworkBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
     }
-
-    // public bool RequestPlayerInput(out PlayerInput playerInput) {
-    // }
 }

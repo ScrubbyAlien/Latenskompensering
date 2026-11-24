@@ -1,14 +1,16 @@
+using System;
 using UnityEngine;
 
-public class AIController : Controller
+[RequireComponent(typeof(Controller))]
+public class AIController : MonoBehaviour
 {
     [SerializeField]
     private Referee referee;
     [SerializeField]
     private CourtInfo courtInfo;
+    private Controller controller;
 
-    [Header("AI Parameters")]
-    [SerializeField]
+    [Header("AI Parameters"), SerializeField]
     private float reactionSpeed;
     private float nextReactionTime;
     [SerializeField]
@@ -22,45 +24,51 @@ public class AIController : Controller
     private float serveWaitTime;
     private float serveTime;
     private bool serving;
-    
-    protected override void Update() {
-        base.Update();
 
+    private void Awake() {
+        controller = GetComponent<Controller>();
+        controller.OnGetServe += OnGetServe;
+    }
+
+    private void Update() {
         Vector3 target = Vector3.zero;
         Ball ball = referee.ballInPlay;
 
         bool noBall = !ball && ball.dead;
         bool returnBall = !noBall && ball.lastPlayerHit != this && !ball.servingPlayer;
         if (returnBall) {
-            target = CalculateDestination(ball.velocity, ball.transform.position) 
-                     + playerRaquet.transform.localPosition.XZ();
+            target = CalculateDestination(ball.velocity, ball.transform.position)
+                     + controller.playerRaquet.transform.localPosition.XZ();
         }
-        else { 
+        else {
             // when not moving to ball, move toward center
             nextReactionTime = Time.time + reactionSpeed;
-            target = (playerA ? courtInfo.ASide : courtInfo.BSide).center; 
+            target = (controller.playerA ? courtInfo.ASide : courtInfo.BSide).center;
         }
-        
-        
+
         Vector2 difference = target.XZ2() - transform.position.XZ2();
         float distance = difference.magnitude;
-        if (distance > 0.2f && (Time.time > nextReactionTime || !returnBall)) Move(difference.normalized);
-        else Move(Vector2.zero);
+        if (distance > 0.2f && (Time.time > nextReactionTime || !returnBall)) {
+            controller.Move(difference.normalized);
+        }
+        else {
+            controller.Move(Vector2.zero);
+        }
         if (noBall) return;
-        
-        if (distance > dashLimit) Dash();
-        
-        bool ballOnMyCourt = !(ball.transform.position.z > 0 ^ playerA); // both false or both true
+
+        if (distance > dashLimit) controller.Dash();
+
+        bool ballOnMyCourt = !((ball.transform.position.z > 0) ^ controller.playerA); // both false or both true
         bool serve = serving && Time.time >= serveTime;
         bool attemptReturn = returnBall && Time.time > nextSwingTime && ball.transform.position.y < swingWithinHeight;
         if (ballOnMyCourt && (serve || attemptReturn)) {
-            Swing();
+            controller.Swing();
             serving = false;
             nextSwingTime = Time.time + swingCooldown;
         }
     }
 
-    public override void OnGetServe() {
+    private void OnGetServe() {
         serving = true;
         serveTime = Time.time + serveWaitTime;
     }

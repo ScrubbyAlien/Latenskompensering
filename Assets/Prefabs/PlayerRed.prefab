@@ -160,6 +160,7 @@ GameObject:
   - component: {fileID: 5481926112060303870}
   - component: {fileID: 5258919010160880353}
   - component: {fileID: 5358969254007768558}
+  - component: {fileID: 8823213815246812060}
   m_Layer: 0
   m_Name: PlayerRed
   m_TagString: Court
@@ -304,16 +305,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 732327e8dbd5b04468ad993305e5b5a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AIController
-  acceleration: 25
-  dampening: 0.95
-  maxSpeed: 5
-  dashAcceleration: 10
-  dashSpeed: 12
-  dashCooldown: 0.4
-  animator: {fileID: 5358969254007768558}
-  isASidePlayer: 0
-  raquet: {fileID: 6678855816101086370}
-  serveHandle: {fileID: 6787537115551941452}
   referee: {fileID: 0}
   courtInfo: {fileID: 11400000, guid: 81df696b1b5922640beb77b278eee600, type: 2}
   reactionSpeed: 0.4
@@ -343,6 +334,28 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8823213815246812060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7804079976646616152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a102a344679b1144a7f539db2463a0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Controller
+  acceleration: 30
+  dampening: 0.8
+  maxSpeed: 7
+  dashAcceleration: 20
+  dashSpeed: 12
+  dashCooldown: 0.4
+  animator: {fileID: 5358969254007768558}
+  isASidePlayer: 0
+  raquet: {fileID: 6678855816101086370}
+  serveHandle: {fileID: 6787537115551941452}
 --- !u!1001 &8540663833960061047
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -394,7 +407,7 @@ PrefabInstance:
     - target: {fileID: 3041767561658555605, guid: a46daba172df925468955626697b8859, type: 3}
       propertyPath: heldByPlayer
       value: 
-      objectReference: {fileID: 5258919010160880353}
+      objectReference: {fileID: 0}
     - target: {fileID: 4902990767906568275, guid: a46daba172df925468955626697b8859, type: 3}
       propertyPath: m_Name
       value: Raquet
