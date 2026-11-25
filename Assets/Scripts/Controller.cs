@@ -69,6 +69,9 @@ public class Controller : MonoBehaviour
             }
         }
 
+        float min = max / 5f;
+        max = Mathf.Max(max * moveVector.magnitude, min);
+
         float speed = body.linearVelocity.magnitude;
         if (speed > max) {
             Vector3 backwards = -body.linearVelocity / speed;

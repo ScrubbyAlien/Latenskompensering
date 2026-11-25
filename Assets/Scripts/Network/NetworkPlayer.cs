@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -21,40 +22,42 @@ public class NetworkPlayer : NetworkBehaviour
     }
 
     public override void OnNetworkSpawn() {
-        if (!IsOwner) return;
+        if (!IsClient) return;
         playerInput.enabled = true;
-        move = playerInput.actions.FindAction("Move");
-        dash = playerInput.actions.FindAction("Dash");
-        swing = playerInput.actions.FindAction("Swing");
+        // move = playerInput.actions.FindAction("Move");
+        // dash = playerInput.actions.FindAction("Dash");
+        // swing = playerInput.actions.FindAction("Swing");
+
+        playerInput.actions.FindAction("Move").performed += MoveCallHandle;
+        playerInput.actions.FindAction("Move").canceled += MoveCallHandle;
 
         if (NetworkObjectId == 1) {
             playerInput.SwitchCurrentControlScheme(Keyboard.current, Mouse.current);
         }
-        else {
+        else if (NetworkObjectId == 2) {
             playerInput.SwitchCurrentControlScheme(Gamepad.current);
         }
     }
 
-    private void Update() {
-        if (!IsOwner) return;
-        Move(move.ReadValue<Vector2>());
+    private void MoveCallHandle(InputAction.CallbackContext context) {
+        Move(context.ReadValue<Vector2>());
     }
 
+    // private void Update() {
+    //     
+    //     if (IsClient && OwnerClientId != 2) {
+    //         Move(move.ReadValue<Vector2>());
+    //     }
+    // }
+
     private void Move(Vector2 input) {
-        MoveServerRpc(input, OwnerClientId);
+        MoveServerRpc(input, NetworkManager.Singleton.LocalClientId, NetworkObjectId);
     }
 
     [Rpc(SendTo.Server)]
-    public void MoveServerRpc(Vector2 moveInput, ulong clientId) {
-        Controller clientController = NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(clientId)
+    public void MoveServerRpc(Vector2 moveInput, ulong clientId, ulong noid) {
+        Controller clientController = NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(noid)
                                                     .GetComponent<Controller>();
         clientController.Move(moveInput);
     }
-
-    // [Rpc(SendTo.ClientsAndHost)]
-    // public void MoveClientRpc(Vector2 moveInput) {
-    //     if (IsOwner) {
-    //         controller.Move(moveInput);
-    //     }
-    // }
 }
