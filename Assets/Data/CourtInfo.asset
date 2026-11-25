@@ -23,3 +23,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 3849211e04c0c6743ba495726bd47275, type: 2}
   netHeight: 4
   ceilingHeight: 7
+  sideACameraPosition: {x: 0, y: 16, z: 30}
+  sideACameraRotation: {x: 30, y: 180, z: 0}
+  sideBCameraPosition: {x: 0, y: 16, z: -30}
+  sideBCameraRotation: {x: 30, y: 0, z: 0}

@@ -11,6 +11,10 @@ public class CourtInfo : ScriptableObject
     private Material[] sideColors;
     [SerializeField]
     public float netHeight, ceilingHeight;
+    [SerializeField]
+    public Vector3 sideACameraPosition, sideACameraRotation;
+    [SerializeField]
+    public Vector3 sideBCameraPosition, sideBCameraRotation;
 
     private void OnValidate() {
         if (ceilingHeight < netHeight) ceilingHeight = netHeight;
@@ -56,5 +60,16 @@ public class CourtInfo : ScriptableObject
             return BSide.center;
         }
         return Vector3.zero;
+    }
+
+    public void SetCameraPosition(ulong side, Camera camera) {
+        if (side == 1) {
+            camera.transform.position = sideACameraPosition;
+            camera.transform.eulerAngles = sideACameraRotation;
+        }
+        else if (side == 2) {
+            camera.transform.position = sideBCameraPosition;
+            camera.transform.eulerAngles = sideBCameraRotation;
+        }
     }
 }

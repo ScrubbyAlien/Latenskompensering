@@ -9,6 +9,8 @@ public class NetworkPlayer : NetworkBehaviour
 {
     [SerializeField]
     private CourtInfo courtInfo;
+    [SerializeField]
+    private Camera playerCamera;
 
     // https://discussions.unity.com/t/how-to-use-input-system-together-with-netcode-for-gameobjects/260546
     [SerializeField]
@@ -25,18 +27,29 @@ public class NetworkPlayer : NetworkBehaviour
     }
 
     public override void OnNetworkSpawn() {
+        playerCamera.gameObject.SetActive(false);
         GetComponent<MeshRenderer>().sharedMaterial = courtInfo.GetSideColor(NetworkObjectId - 1);
+
         if (IsServer) {
-            transform.position = courtInfo.GetSideStartPosition(NetworkObjectId);
+            SetPositionRpc();
         }
+
+        if (IsOwner) {
+            playerCamera.transform.parent = null;
+            courtInfo.SetCameraPosition(NetworkObjectId, playerCamera);
+            // ReSharper disable once Unity.PerformanceCriticalCodeCameraMain
+            Camera.main.gameObject.SetActive(false);
+            playerCamera.gameObject.SetActive(true);
+        }
+
         if (IsClient) {
             playerInput.enabled = true;
-            // move = playerInput.actions.FindAction("Move");
+            move = playerInput.actions.FindAction("Move");
             // dash = playerInput.actions.FindAction("Dash");
             // swing = playerInput.actions.FindAction("Swing");
 
-            playerInput.actions.FindAction("Move").performed += MoveCallHandle;
-            playerInput.actions.FindAction("Move").canceled += MoveCallHandle;
+            move.performed += MoveCallHandle;
+            move.canceled += MoveCallHandle;
 
             if (NetworkObjectId == 1) {
                 playerInput.SwitchCurrentControlScheme(Keyboard.current, Mouse.current);
@@ -48,15 +61,14 @@ public class NetworkPlayer : NetworkBehaviour
     }
 
     private void MoveCallHandle(InputAction.CallbackContext context) {
-        Move(context.ReadValue<Vector2>());
+        Vector2 input = context.ReadValue<Vector2>();
+        if (NetworkObjectId == 1) input *= -1; // adjust for rotation of camera
+        Move(input);
     }
 
-    // private void Update() {
-    //     
-    //     if (IsClient && OwnerClientId != 2) {
-    //         Move(move.ReadValue<Vector2>());
-    //     }
-    // }
+    private void Update() {
+        Debug.Log(transform.position.y);
+    }
 
     private void Move(Vector2 input) {
         if (IsClient) {
@@ -69,5 +81,16 @@ public class NetworkPlayer : NetworkBehaviour
         Controller clientController = NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(noid)
                                                     .GetComponent<Controller>();
         clientController.Move(moveInput);
+    }
+
+    // [Rpc(SendTo.ClientsAndHost)]
+    private void SetPositionRpc() {
+        transform.position = courtInfo.GetSideStartPosition(NetworkObjectId);
+        SetClientPositionRpc(transform.position);
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void SetClientPositionRpc(Vector3 position) {
+        transform.position = position;
     }
 }
