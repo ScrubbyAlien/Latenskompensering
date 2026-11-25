@@ -8,6 +8,8 @@ public class CourtInfo : ScriptableObject
     [SerializeField]
     public Bounds ASide, BSide;
     [SerializeField]
+    private Material[] sideColors;
+    [SerializeField]
     public float netHeight, ceilingHeight;
 
     private void OnValidate() {
@@ -40,5 +42,19 @@ public class CourtInfo : ScriptableObject
             Random.Range(bounds.min.y, bounds.max.y),
             Random.Range(bounds.min.z, bounds.max.z)
         );
+    }
+
+    public Material GetSideColor(ulong side) {
+        return sideColors[side];
+    }
+
+    public Vector3 GetSideStartPosition(ulong side) {
+        if (side == 1)  {
+            return ASide.center;
+        }
+        else if (side == 2) {
+            return BSide.center;
+        }
+        return Vector3.zero;
     }
 }

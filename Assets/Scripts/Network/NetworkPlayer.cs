@@ -7,6 +7,9 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Controller))]
 public class NetworkPlayer : NetworkBehaviour
 {
+    [SerializeField]
+    private CourtInfo courtInfo;
+
     // https://discussions.unity.com/t/how-to-use-input-system-together-with-netcode-for-gameobjects/260546
     [SerializeField]
     private PlayerInput playerInput;
@@ -22,20 +25,25 @@ public class NetworkPlayer : NetworkBehaviour
     }
 
     public override void OnNetworkSpawn() {
-        if (!IsClient) return;
-        playerInput.enabled = true;
-        // move = playerInput.actions.FindAction("Move");
-        // dash = playerInput.actions.FindAction("Dash");
-        // swing = playerInput.actions.FindAction("Swing");
-
-        playerInput.actions.FindAction("Move").performed += MoveCallHandle;
-        playerInput.actions.FindAction("Move").canceled += MoveCallHandle;
-
-        if (NetworkObjectId == 1) {
-            playerInput.SwitchCurrentControlScheme(Keyboard.current, Mouse.current);
+        GetComponent<MeshRenderer>().sharedMaterial = courtInfo.GetSideColor(NetworkObjectId - 1);
+        if (IsServer) {
+            transform.position = courtInfo.GetSideStartPosition(NetworkObjectId);
         }
-        else if (NetworkObjectId == 2) {
-            playerInput.SwitchCurrentControlScheme(Gamepad.current);
+        if (IsClient) {
+            playerInput.enabled = true;
+            // move = playerInput.actions.FindAction("Move");
+            // dash = playerInput.actions.FindAction("Dash");
+            // swing = playerInput.actions.FindAction("Swing");
+
+            playerInput.actions.FindAction("Move").performed += MoveCallHandle;
+            playerInput.actions.FindAction("Move").canceled += MoveCallHandle;
+
+            if (NetworkObjectId == 1) {
+                playerInput.SwitchCurrentControlScheme(Keyboard.current, Mouse.current);
+            }
+            else if (NetworkObjectId == 2) {
+                playerInput.SwitchCurrentControlScheme(Gamepad.current);
+            }
         }
     }
 
@@ -51,7 +59,9 @@ public class NetworkPlayer : NetworkBehaviour
     // }
 
     private void Move(Vector2 input) {
-        MoveServerRpc(input, NetworkManager.Singleton.LocalClientId, NetworkObjectId);
+        if (IsClient) {
+            MoveServerRpc(input, NetworkManager.Singleton.LocalClientId, NetworkObjectId);
+        }
     }
 
     [Rpc(SendTo.Server)]

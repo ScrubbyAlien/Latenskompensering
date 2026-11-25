@@ -139,8 +139,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Raquet
   heldByPlayer: {fileID: 0}
-  variation: 0.3
-  width: 4
+  variation: 0.1
+  width: 6
   courtInfo: {fileID: 11400000, guid: 81df696b1b5922640beb77b278eee600, type: 2}
 --- !u!136 &5352969876025506140
 CapsuleCollider:

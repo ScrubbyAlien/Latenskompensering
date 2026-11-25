@@ -18,5 +18,8 @@ MonoBehaviour:
   BSide:
     m_Center: {x: 0, y: 1, z: -5}
     m_Extent: {x: 5, y: 0, z: 2.5}
+  sideColors:
+  - {fileID: 2100000, guid: aa812f083de84ae40a1eb6aef1ccc151, type: 2}
+  - {fileID: 2100000, guid: 3849211e04c0c6743ba495726bd47275, type: 2}
   netHeight: 4
   ceilingHeight: 7

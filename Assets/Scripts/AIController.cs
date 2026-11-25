@@ -34,8 +34,8 @@ public class AIController : MonoBehaviour
         Vector3 target = Vector3.zero;
         Ball ball = referee.ballInPlay;
 
-        bool noBall = !ball && ball.dead;
-        bool returnBall = !noBall && ball.lastPlayerHit != this && !ball.servingPlayer;
+        bool noBall = !ball || ball.dead;
+        bool returnBall = !noBall && ball.lastPlayerHit != controller && !ball.servingPlayer;
         if (returnBall) {
             target = CalculateDestination(ball.velocity, ball.transform.position)
                      + controller.playerRaquet.transform.localPosition.XZ();

@@ -53,7 +53,7 @@ GameObject:
   - component: {fileID: 1811691441405857635}
   - component: {fileID: 8823213815246812060}
   m_Layer: 0
-  m_Name: PlayerBlueNetwork
+  m_Name: PlayerNetwork
   m_TagString: Court
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -211,6 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayer
   ShowTopMostFoldoutHeaderGroup: 1
+  courtInfo: {fileID: 11400000, guid: 81df696b1b5922640beb77b278eee600, type: 2}
   playerInput: {fileID: 1811691441405857635}
 --- !u!33 &1098611928980035681
 MeshFilter:
