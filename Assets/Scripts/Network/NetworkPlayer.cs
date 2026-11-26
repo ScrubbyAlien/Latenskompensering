@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -30,11 +31,8 @@ public class NetworkPlayer : NetworkBehaviour
         playerCamera.gameObject.SetActive(false);
         GetComponent<MeshRenderer>().sharedMaterial = courtInfo.GetSideColor(NetworkObjectId - 1);
 
-        if (IsServer) {
-            SetPositionRpc();
-        }
-
         if (IsOwner) {
+            SetPosition();
             playerCamera.transform.parent = null;
             courtInfo.SetCameraPosition(NetworkObjectId, playerCamera);
             // ReSharper disable once Unity.PerformanceCriticalCodeCameraMain
@@ -66,31 +64,25 @@ public class NetworkPlayer : NetworkBehaviour
         Move(input);
     }
 
-    private void Update() {
-        Debug.Log(transform.position.y);
-    }
-
     private void Move(Vector2 input) {
         if (IsClient) {
-            MoveServerRpc(input, NetworkManager.Singleton.LocalClientId, NetworkObjectId);
+            MoveClientControllerRpc(input, /* NetworkManager.Singleton.LocalClientId,*/ NetworkObjectId);
+        }
+    }
+    //
+    // [Rpc(SendTo.Server)]
+    // public void MoveServerRpc(Vector2 moveInput, /*ulong clientId,*/ ulong noid) {
+    //     MoveClientControllerRpc( moveInput, noid);
+    // }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void MoveClientControllerRpc( Vector2 moveInput, ulong noid) {
+        if (NetworkObjectId == noid) {
+            controller.Move(moveInput);
         }
     }
 
-    [Rpc(SendTo.Server)]
-    public void MoveServerRpc(Vector2 moveInput, ulong clientId, ulong noid) {
-        Controller clientController = NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(noid)
-                                                    .GetComponent<Controller>();
-        clientController.Move(moveInput);
-    }
-
-    // [Rpc(SendTo.ClientsAndHost)]
-    private void SetPositionRpc() {
+    private void SetPosition() {
         transform.position = courtInfo.GetSideStartPosition(NetworkObjectId);
-        SetClientPositionRpc(transform.position);
-    }
-
-    [Rpc(SendTo.ClientsAndHost)]
-    private void SetClientPositionRpc(Vector3 position) {
-        transform.position = position;
     }
 }
