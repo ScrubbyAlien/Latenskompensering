@@ -43,11 +43,13 @@ public class NetworkPlayer : NetworkBehaviour
         if (IsClient) {
             playerInput.enabled = true;
             move = playerInput.actions.FindAction("Move");
-            // dash = playerInput.actions.FindAction("Dash");
-            // swing = playerInput.actions.FindAction("Swing");
+            dash = playerInput.actions.FindAction("Dash");
+            swing = playerInput.actions.FindAction("Swing");
 
             move.performed += MoveCallHandle;
             move.canceled += MoveCallHandle;
+            dash.performed += DashCallHandle;
+            swing.performed += SwingCallHandle;
 
             if (NetworkObjectId == 1) {
                 playerInput.SwitchCurrentControlScheme(Keyboard.current, Mouse.current);
@@ -55,6 +57,13 @@ public class NetworkPlayer : NetworkBehaviour
             else if (NetworkObjectId == 2) {
                 playerInput.SwitchCurrentControlScheme(Gamepad.current);
             }
+        }
+    }
+
+    private void Start() {
+        if (IsOwner) {
+            GetComponent<Rigidbody>().constraints =
+                RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
         }
     }
 
@@ -66,23 +75,53 @@ public class NetworkPlayer : NetworkBehaviour
 
     private void Move(Vector2 input) {
         if (IsClient) {
-            MoveClientControllerRpc(input, /* NetworkManager.Singleton.LocalClientId,*/ NetworkObjectId);
+            MoveControllerClientRpc(input, /* NetworkManager.Singleton.LocalClientId,*/ NetworkObjectId);
         }
     }
-    //
-    // [Rpc(SendTo.Server)]
-    // public void MoveServerRpc(Vector2 moveInput, /*ulong clientId,*/ ulong noid) {
-    //     MoveClientControllerRpc( moveInput, noid);
-    // }
 
     [Rpc(SendTo.ClientsAndHost)]
-    public void MoveClientControllerRpc( Vector2 moveInput, ulong noid) {
+    public void MoveControllerClientRpc(Vector2 moveInput, ulong noid) {
         if (NetworkObjectId == noid) {
             controller.Move(moveInput);
         }
     }
 
+    private void DashCallHandle(InputAction.CallbackContext context) {
+        Dash();
+    }
+
+    private void Dash() {
+        if (IsClient) {
+            DashClientRpc(NetworkObjectId);
+        }
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void DashClientRpc(ulong noid) {
+        if (NetworkObjectId == noid) {
+            controller.Dash();
+        }
+    }
+
+    private void SwingCallHandle(InputAction.CallbackContext context) {
+        Swing();
+    }
+
+    private void Swing() {
+        if (IsClient) {
+            SwingClientRpc(NetworkObjectId);
+        }
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void SwingClientRpc(ulong noid) {
+        if (NetworkObjectId == noid) {
+            controller.Swing();
+        }
+    }
+
     private void SetPosition() {
+        if (controller.playerA) transform.eulerAngles = new Vector3(0f, 180f, 0f);
         transform.position = courtInfo.GetSideStartPosition(NetworkObjectId);
     }
 }
