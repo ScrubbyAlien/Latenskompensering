@@ -121,7 +121,7 @@ public class NetworkPlayer : NetworkBehaviour
     }
 
     private void SetPosition() {
-        if (controller.playerA) transform.eulerAngles = new Vector3(0f, 180f, 0f);
+        if (NetworkObjectId == 1) transform.eulerAngles = new Vector3(0f, 180f, 0f);
         transform.position = courtInfo.GetSideStartPosition(NetworkObjectId);
     }
 }
