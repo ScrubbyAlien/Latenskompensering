@@ -101,4 +101,8 @@ public class Controller : MonoBehaviour
     public void GetServe() {
         OnGetServe?.Invoke();
     }
+
+    public void SetASide(bool isPlayerA) {
+        isASidePlayer = isPlayerA;
+    }
 }

@@ -29,12 +29,13 @@ public class NetworkPlayer : NetworkBehaviour
 
     public override void OnNetworkSpawn() {
         playerCamera.gameObject.SetActive(false);
-        GetComponent<MeshRenderer>().sharedMaterial = courtInfo.GetSideColor(NetworkObjectId - 1);
+        GetComponent<MeshRenderer>().sharedMaterial = courtInfo.GetSideColor(OwnerClientId - 1);
+        controller.SetASide(OwnerClientId == 1);
 
         if (IsOwner) {
-            SetPosition();
+            SetInitialPosition();
             playerCamera.transform.parent = null;
-            courtInfo.SetCameraPosition(NetworkObjectId, playerCamera);
+            courtInfo.SetCameraPosition(OwnerClientId, playerCamera);
             // ReSharper disable once Unity.PerformanceCriticalCodeCameraMain
             Camera.main.gameObject.SetActive(false);
             playerCamera.gameObject.SetActive(true);
@@ -51,10 +52,10 @@ public class NetworkPlayer : NetworkBehaviour
             dash.performed += DashCallHandle;
             swing.performed += SwingCallHandle;
 
-            if (NetworkObjectId == 1) {
+            if (OwnerClientId == 1) {
                 playerInput.SwitchCurrentControlScheme(Keyboard.current, Mouse.current);
             }
-            else if (NetworkObjectId == 2) {
+            else if (OwnerClientId == 2) {
                 playerInput.SwitchCurrentControlScheme(Gamepad.current);
             }
         }
@@ -64,12 +65,18 @@ public class NetworkPlayer : NetworkBehaviour
         if (IsOwner) {
             GetComponent<Rigidbody>().constraints =
                 RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
+
+            NetworkReferee referee = NetworkReferee.instance;
+            if (referee) {
+                if (OwnerClientId == 1) referee.RegisterPlayerARpc(OwnerClientId);
+                if (OwnerClientId == 2) referee.RegisterPlayerBRpc(OwnerClientId);
+            }
         }
     }
 
     private void MoveCallHandle(InputAction.CallbackContext context) {
         Vector2 input = context.ReadValue<Vector2>();
-        if (NetworkObjectId == 1) input *= -1; // adjust for rotation of camera
+        if (OwnerClientId == 1) input *= -1; // adjust for rotation of camera
         Move(input);
     }
 
@@ -120,8 +127,15 @@ public class NetworkPlayer : NetworkBehaviour
         }
     }
 
-    private void SetPosition() {
-        if (NetworkObjectId == 1) transform.eulerAngles = new Vector3(0f, 180f, 0f);
-        transform.position = courtInfo.GetSideStartPosition(NetworkObjectId);
+    private void SetInitialPosition() {
+        if (OwnerClientId == 1) transform.eulerAngles = new Vector3(0f, 180f, 0f);
+        transform.position = courtInfo.GetSideStartPosition(OwnerClientId);
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void SetPositionRpc(ulong noid, Vector3 position) {
+        if (NetworkObjectId == noid) {
+            transform.position = position;
+        }
     }
 }
