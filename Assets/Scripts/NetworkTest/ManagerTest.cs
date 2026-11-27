@@ -4,9 +4,11 @@ using UnityEngine;
 public class ManagerTest : MonoBehaviour
 {
     private static NetworkManager networkManager;
+    private static NetworkReferee referee;
 
-    private void Awake() {
+    private void Start() {
         networkManager = NetworkManager.Singleton;
+        referee = NetworkReferee.instance;
     }
 
     private void OnGUI() {
@@ -14,10 +16,10 @@ public class ManagerTest : MonoBehaviour
         if (!networkManager.IsClient && !networkManager.IsServer) {
             StartButtons();
         }
-        else {
-            StatusLabels();
-
-            SubmitNewPosition();
+        else if (networkManager.IsServer && referee) {
+            if (GUILayout.Button("Reset Players")) {
+                referee.ResetPlayers();
+            }
         }
 
         GUILayout.EndArea();
@@ -29,29 +31,29 @@ public class ManagerTest : MonoBehaviour
         if (GUILayout.Button("Server")) networkManager.StartServer();
     }
 
-    private static void StatusLabels() {
-        string mode = networkManager.IsHost ? "Host" : networkManager.IsServer ? "Server" : "Client";
-
-        GUILayout.Label("Transport: " +
-                        networkManager.NetworkConfig.NetworkTransport.GetType().Name);
-        GUILayout.Label("Mode: " + mode);
-    }
-
-    private static void SubmitNewPosition() {
-        if (GUILayout.Button(networkManager.IsServer ?  "Move" : "Request Position Change")) {
-            if (networkManager.IsServer && !networkManager.IsClient ) {
-                foreach (ulong uid in networkManager.ConnectedClientsIds) {
-                    networkManager.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<PlayerTest>()
-                                  .Move();
-                }
-            }
-            else {
-                NetworkObject playerObject = networkManager.SpawnManager.GetLocalPlayerObject();
-                PlayerTest player = playerObject.GetComponent<PlayerTest>();
-                player.Move();
-            }
-        }
-    }
+    // private static void StatusLabels() {
+    //     string mode = networkManager.IsHost ? "Host" : networkManager.IsServer ? "Server" : "Client";
+    //
+    //     GUILayout.Label("Transport: " +
+    //                     networkManager.NetworkConfig.NetworkTransport.GetType().Name);
+    //     GUILayout.Label("Mode: " + mode);
+    // }
+    //
+    // private static void SubmitNewPosition() {
+    //     if (GUILayout.Button(networkManager.IsServer ?  "Move" : "Request Position Change")) {
+    //         if (networkManager.IsServer && !networkManager.IsClient ) {
+    //             foreach (ulong uid in networkManager.ConnectedClientsIds) {
+    //                 networkManager.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<PlayerTest>()
+    //                               .Move();
+    //             }
+    //         }
+    //         else {
+    //             NetworkObject playerObject = networkManager.SpawnManager.GetLocalPlayerObject();
+    //             PlayerTest player = playerObject.GetComponent<PlayerTest>();
+    //             player.Move();
+    //         }
+    //     }
+    // }
 
     // private static void DebugInfo() {
     //     if (networkManager.Is)

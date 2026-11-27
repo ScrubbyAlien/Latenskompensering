@@ -22,16 +22,18 @@ public class NetworkReferee : NetworkBehaviour
         playerAClientId = new NetworkVariable<ulong>();
         playerBClientId = new NetworkVariable<ulong>();
 
+        instance = this;
+    }
+
+    public override void OnNetworkSpawn() {
         if (IsServer) {
+            nm = NetworkManager.Singleton;
+
             playerAClientId.OnValueChanged += UpdatePlayerA;
             playerBClientId.OnValueChanged += UpdatePlayerB;
         }
-
-        instance = this;
-        nm = NetworkManager.Singleton;
     }
 
-    [Button]
     public void ResetPlayers() {
         if (IsServer) {
             ResetPlayer(playerA);
@@ -40,9 +42,8 @@ public class NetworkReferee : NetworkBehaviour
     }
 
     private void ResetPlayer(NetworkPlayer player) {
-        if (!IsServer) return;
-        ulong noid = player.NetworkObjectId;
-        player.SetPositionRpc(noid, courtInfo.GetSideStartPosition(noid));
+        if (!IsServer || !player) return;
+        player.SetPositionRpc(player.NetworkObjectId, courtInfo.GetSideStartPosition(player.OwnerClientId));
     }
 
     private void UpdatePlayerA(ulong oldId, ulong newId) {
@@ -56,14 +57,18 @@ public class NetworkReferee : NetworkBehaviour
     [Rpc(SendTo.Server)]
     public void RegisterPlayerARpc(ulong clientId) {
         playerAClientId.Value = clientId;
-        Debug.LogAssertion($"Correct id: {clientId == playerA.OwnerClientId}");
+        AssertCorrectClientIds(clientId, playerA.OwnerClientId);
         Debug.Log($"Registered Player A from client {playerAClientId.Value}");
     }
 
     [Rpc(SendTo.Server)]
     public void RegisterPlayerBRpc(ulong clientId) {
         playerBClientId.Value = clientId;
-        Debug.LogAssertion($"Correct id: {clientId == playerB.OwnerClientId}");
+        AssertCorrectClientIds(clientId, playerB.OwnerClientId);
         Debug.Log($"Registered Player B from client {playerBClientId.Value}");
+    }
+
+    private void AssertCorrectClientIds(ulong id1, ulong id2) {
+        Debug.Assert(id1 == id2, "non matching client ids");
     }
 }
