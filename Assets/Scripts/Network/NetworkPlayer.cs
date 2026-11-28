@@ -16,7 +16,8 @@ public class NetworkPlayer : NetworkBehaviour
     // https://discussions.unity.com/t/how-to-use-input-system-together-with-netcode-for-gameobjects/260546
     [SerializeField]
     private PlayerInput playerInput;
-    private Controller controller;
+    [HideInInspector]
+    public Controller controller;
 
     private InputAction move;
     private InputAction dash;
@@ -39,6 +40,11 @@ public class NetworkPlayer : NetworkBehaviour
             // ReSharper disable once Unity.PerformanceCriticalCodeCameraMain
             Camera.main.gameObject.SetActive(false);
             playerCamera.gameObject.SetActive(true);
+
+            if (NetworkReferee.instance && IsSpawned) {
+                if (OwnerClientId == 1) NetworkReferee.instance.RegisterPlayerARpc(OwnerClientId);
+                if (OwnerClientId == 2) NetworkReferee.instance.RegisterPlayerBRpc(OwnerClientId);
+            }
         }
 
         if (IsClient) {
@@ -66,10 +72,9 @@ public class NetworkPlayer : NetworkBehaviour
             GetComponent<Rigidbody>().constraints =
                 RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
 
-            NetworkReferee referee = NetworkReferee.instance;
-            if (referee) {
-                if (OwnerClientId == 1) referee.RegisterPlayerARpc(OwnerClientId);
-                if (OwnerClientId == 2) referee.RegisterPlayerBRpc(OwnerClientId);
+            if (NetworkReferee.instance && IsSpawned) {
+                if (OwnerClientId == 1) NetworkReferee.instance.RegisterPlayerARpc(OwnerClientId);
+                if (OwnerClientId == 2) NetworkReferee.instance.RegisterPlayerBRpc(OwnerClientId);
             }
         }
     }

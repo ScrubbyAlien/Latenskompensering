@@ -178,6 +178,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NetworkReferee
   ShowTopMostFoldoutHeaderGroup: 1
   courtInfo: {fileID: 11400000, guid: 81df696b1b5922640beb77b278eee600, type: 2}
+  ballPrefab: {fileID: 5970006631145356260, guid: 1905ffd0b7a72d04cb6f223e7f9d0cca, type: 3}
+  winScore: 5
+  maxScore: 10
 --- !u!4 &528124320
 Transform:
   m_ObjectHideFlags: 0
@@ -660,7 +663,7 @@ MonoBehaviour:
     EnableTimeResync: 0
     TimeResyncInterval: 30
     EnsureNetworkVariableLengthSafety: 0
-    EnableSceneManagement: 1
+    EnableSceneManagement: 0
     ForceSamePrefabs: 1
     RecycleNetworkIds: 1
     NetworkIdRecycleDelay: 120
